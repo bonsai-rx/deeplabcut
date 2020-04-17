@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bonsai.Dlc", "Bonsai.Dlc\Bonsai.Dlc.csproj", "{B88E21D7-AE4E-4AD1-A267-A4317D6C1678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bonsai.Dlc.Design", "Bonsai.Dlc.Design\Bonsai.Dlc.Design.csproj", "{EA43FE49-311C-4626-A688-406BE8483A47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{575723AC-ECDF-4FCE-986A-3503555B1BDD}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B88E21D7-AE4E-4AD1-A267-A4317D6C1678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B88E21D7-AE4E-4AD1-A267-A4317D6C1678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B88E21D7-AE4E-4AD1-A267-A4317D6C1678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B88E21D7-AE4E-4AD1-A267-A4317D6C1678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA43FE49-311C-4626-A688-406BE8483A47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA43FE49-311C-4626-A688-406BE8483A47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA43FE49-311C-4626-A688-406BE8483A47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA43FE49-311C-4626-A688-406BE8483A47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F425ED09-85E6-4619-8F6C-08DDAFB9CC71}
+	EndGlobalSection
+EndGlobal

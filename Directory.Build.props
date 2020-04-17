@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <Authors>Gonçalo Lopes</Authors>
+    <Copyright>Copyright © Gonçalo Lopes 2020</Copyright>
+    <ProjectUrl>https://github.com/bonsai-rx/dlc</ProjectUrl>
+    <PackageLicenseUrl>https://bonsai-rx.org/license</PackageLicenseUrl>
+    <PackageIconUrl>https://bonsai-rx.org/assets/images/bonsai.png</PackageIconUrl>
+    <IncludeSymbols Condition="'$(Configuration)'=='Release'">false</IncludeSymbols>
+    <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Features>strict</Features>
+  </PropertyGroup>
+</Project>
