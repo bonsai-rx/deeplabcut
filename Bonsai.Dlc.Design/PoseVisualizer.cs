@@ -92,7 +92,7 @@ namespace Bonsai.Dlc.Design
                         var position = bodyPart.Position;
                         GL.Color3(color.Val2 / 255, color.Val1 / 255, color.Val0 / 255);
                         GL.Vertex2(NormalizePoint(position, pose.Image.Size));
-                        //graphics.DrawString(bodyPart.Name, labelFont, Brushes.White, position.X, position.Y);
+                        graphics.DrawString(bodyPart.Name, labelFont, Brushes.White, position.X, position.Y);
                     }
                 }
                 GL.End();
