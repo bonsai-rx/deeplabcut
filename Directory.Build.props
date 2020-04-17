@@ -6,9 +6,9 @@
     <ProjectUrl>https://github.com/bonsai-rx/dlc</ProjectUrl>
     <PackageLicenseUrl>https://bonsai-rx.org/license</PackageLicenseUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/bonsai-rx/deeplabcut/master/icon.png</PackageIconUrl>
-    <IncludeSymbols Condition="'$(Configuration)'=='Release'">false</IncludeSymbols>
+    <IncludeSymbols Condition="'$(Configuration)'=='Release'">true</IncludeSymbols>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
     <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Features>strict</Features>
   </PropertyGroup>
 </Project>
