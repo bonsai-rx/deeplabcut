@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
-namespace Bonsai.Dlc
+namespace Bonsai.DeepLabCut
 {
     static class ConfigHelper
     {
@@ -50,9 +50,9 @@ namespace Bonsai.Dlc
             return joints;
         }
 
-        public static DlcConfig ConfigFile(YamlMappingNode mapping)
+        public static PoseConfig ConfigFile(YamlMappingNode mapping)
         {
-            var config = new DlcConfig();
+            var config = new PoseConfig();
             foreach (var entry in mapping.Children)
             {
                 switch (((string)entry.Key).ToLowerInvariant())

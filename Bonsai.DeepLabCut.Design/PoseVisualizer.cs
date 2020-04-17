@@ -1,6 +1,6 @@
 ﻿using Bonsai;
-using Bonsai.Dlc;
-using Bonsai.Dlc.Design;
+using Bonsai.DeepLabCut;
+using Bonsai.DeepLabCut.Design;
 using Bonsai.Vision.Design;
 using OpenCV.Net;
 using OpenTK;
@@ -14,7 +14,7 @@ using Font = System.Drawing.Font;
 
 [assembly: TypeVisualizer(typeof(PoseVisualizer), Target = typeof(Pose))]
 
-namespace Bonsai.Dlc.Design
+namespace Bonsai.DeepLabCut.Design
 {
     public class PoseVisualizer : IplImageVisualizer
     {

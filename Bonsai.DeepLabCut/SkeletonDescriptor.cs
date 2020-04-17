@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace Bonsai.Dlc
+namespace Bonsai.DeepLabCut
 {
     public class SkeletonDescriptor
     {

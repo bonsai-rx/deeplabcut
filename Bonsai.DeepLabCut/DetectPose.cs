@@ -6,11 +6,11 @@ using TensorFlow;
 using System.IO;
 using System.ComponentModel;
 
-namespace Bonsai.Dlc
+namespace Bonsai.DeepLabCut
 {
     [DefaultProperty(nameof(Path))]
     [Description("Performs markerless pose estimation using a DeepLabCut model on the input image sequence.")]
-    public class Inference : Transform<IplImage, Pose>
+    public class DetectPose : Transform<IplImage, Pose>
     {
         [FileNameFilter("Protocol Buffer Files(*.pb)|*.pb")]
         [Editor("Bonsai.Design.OpenFileNameEditor, Bonsai.Design", DesignTypes.UITypeEditor)]

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Bonsai.Dlc
+namespace Bonsai.DeepLabCut
 {
-    public class DlcConfig
+    public class PoseConfig
     {
         readonly SkeletonDescriptor skeleton = new SkeletonDescriptor();
 
