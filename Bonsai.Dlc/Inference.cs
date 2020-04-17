@@ -8,13 +8,18 @@ using System.ComponentModel;
 
 namespace Bonsai.Dlc
 {
+    [DefaultProperty(nameof(Path))]
+    [Description("Performs markerless pose estimation using a DeepLabCut model on the input image sequence.")]
     public class Inference : Transform<IplImage, Pose>
     {
         [FileNameFilter("Protocol Buffer Files(*.pb)|*.pb")]
         [Editor("Bonsai.Design.OpenFileNameEditor, Bonsai.Design", DesignTypes.UITypeEditor)]
+        [Description("The path to the exported Protocol Buffer file containing the pretrained DeepLabCut model.")]
         public string Path { get; set; }
 
+        [FileNameFilter("YAML Files(*.yaml)|*.yaml|All Files|*.*")]
         [Editor("Bonsai.Design.OpenFileNameEditor, Bonsai.Design", DesignTypes.UITypeEditor)]
+        [Description("The path to the configuration YAML file containing joint labels.")]
         public string ConfigFile { get; set; }
 
         public override IObservable<Pose> Process(IObservable<IplImage> source)
