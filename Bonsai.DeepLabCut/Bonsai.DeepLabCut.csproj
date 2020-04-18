@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Title>Bonsai - DeepLabCut Library</Title>
-    <Description>Bonsai Library for real-time markerless pose estimation using DeepLabCut.</Description>
+    <Description>Bonsai Library for real-time markerless pose estimation using DeepLabCut. TensorFlow 1.15.0 or compatible is required.</Description>
     <PackageTags>Bonsai Rx Dlc DeepLabCut Markerless Pose Tracking</PackageTags>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetFramework>net472</TargetFramework>

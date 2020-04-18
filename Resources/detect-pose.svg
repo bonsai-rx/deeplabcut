@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="179.8" height="81.428" version="1.1" xmlns="http://www.w3.org/2000/svg">
+ <g shape-rendering="auto">
+  <line x1="47.5" x2="100" y1="23.75" y2="23.75" fill="none" stroke="#a9a9a9" stroke-miterlimit="9" stroke-width="1.25"/>
+  <ellipse transform="matrix(1.25 0 0 1.25 105 5)" cx="15" cy="15" rx="15" ry="15" fill="#449adf"/>
+  <path transform="matrix(1.25 0 0 1.25 105 5)" d="m18.422 13-4.9863 5.5006-2.5801-2.5138-4.3555 4.5133 17.457-0.01428z" fill="#fff" fill-rule="evenodd"/>
+  <ellipse transform="matrix(1.25 0 0 1.25 105 5)" cx="10.92" cy="10.96" rx="2.75" ry="2.75" fill="#fff"/>
+  <text x="105.00" y="48.75" clip-path="url(#51_text_clipper)" fill="currentColor" font-family="Microsoft Sans Serif" font-size="9.75pt"><tspan dy="9.75pt">DetectPose</tspan></text>
+  <path transform="matrix(1.25 0 0 1.25 5 5)" d="m31.179 5.2c3.8195 5.8918 3.8024 13.482-0.04348 19.357" fill="none" stroke="#a9a9a9" stroke-miterlimit="9" stroke-width="2"/>
+  <ellipse transform="matrix(1.25 0 0 1.25 5 5)" cx="15" cy="15" rx="15" ry="15" fill="#5bb27e"/>
+  <path transform="matrix(1.25 0 0 1.25 5 5)" d="m23.75 9.1-4.1913 2.4211v6.8726l4.1913 2.421z" fill="#fff" fill-rule="evenodd"/>
+  <path transform="matrix(1.25 0 0 1.25 5 5)" d="m8.6927 9.2h7.0267c1.4706 0 2.6545 1.2337 2.6545 2.7661v5.8573c0 1.5324-1.1839 2.7659-2.6545 2.7659h-7.0267c-1.4706 0-2.6545-1.2335-2.6545-2.7659v-5.8573c0-1.5324 1.1839-2.7661 2.6545-2.7661z" fill="#fff" fill-rule="evenodd"/>
+  <text x="5.00" y="48.75" clip-path="url(#61_text_clipper)" fill="currentColor" font-family="Microsoft Sans Serif" font-size="9.75pt"><tspan dy="9.75pt">Camera</tspan></text>
+  <text x="5.00" y="63.46" clip-path="url(#67_text_clipper)" fill="currentColor" font-family="Microsoft Sans Serif" font-size="9.75pt"><tspan dy="9.75pt">Capture</tspan></text>
+ </g>
+ <defs>
+  <clipPath id="51_text_clipper">
+   <rect x="105" y="48.75" width="73.55" height="16.34"/>
+  </clipPath>
+  <clipPath id="61_text_clipper">
+   <rect x="5" y="48.75" width="51.96" height="32.68"/>
+  </clipPath>
+  <clipPath id="67_text_clipper">
+   <rect x="5" y="63.46" width="51.96" height="32.68"/>
+  </clipPath>
+ </defs>
+</svg>
