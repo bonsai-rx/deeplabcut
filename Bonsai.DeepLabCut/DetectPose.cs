@@ -8,19 +8,24 @@ using System.ComponentModel;
 
 namespace Bonsai.DeepLabCut
 {
-    [DefaultProperty(nameof(Path))]
+    [DefaultProperty(nameof(ModelFileName))]
     [Description("Performs markerless pose estimation using a DeepLabCut model on the input image sequence.")]
     public class DetectPose : Transform<IplImage, Pose>
     {
         [FileNameFilter("Protocol Buffer Files(*.pb)|*.pb")]
         [Editor("Bonsai.Design.OpenFileNameEditor, Bonsai.Design", DesignTypes.UITypeEditor)]
         [Description("The path to the exported Protocol Buffer file containing the pretrained DeepLabCut model.")]
-        public string Path { get; set; }
+        public string ModelFileName { get; set; }
 
         [FileNameFilter("YAML Files(*.yaml)|*.yaml|All Files|*.*")]
         [Editor("Bonsai.Design.OpenFileNameEditor, Bonsai.Design", DesignTypes.UITypeEditor)]
         [Description("The path to the configuration YAML file containing joint labels.")]
-        public string ConfigFile { get; set; }
+        public string PoseConfigFileName { get; set; }
+
+        [Range(0, 1)]
+        [Editor(DesignTypes.SliderEditor, DesignTypes.UITypeEditor)]
+        [Description("The optional confidence threshold used to discard position values.")]
+        public float? MinConfidence { get; set; }
 
         public override IObservable<Pose> Process(IObservable<IplImage> source)
         {
@@ -39,11 +44,11 @@ namespace Bonsai.DeepLabCut
 
                 var graph = new TFGraph();
                 var session = new TFSession(graph, options, null);
-                var bytes = File.ReadAllBytes(Path);
+                var bytes = File.ReadAllBytes(ModelFileName);
                 graph.Import(bytes);
 
                 TFTensor tensor = null;
-                var config = ConfigHelper.PoseConfig(ConfigFile);
+                var config = ConfigHelper.PoseConfig(PoseConfigFileName);
                 return source.Select(input =>
                 {
                     if (tensor == null || tensor.GetTensorDimension(1) != input.Height || tensor.GetTensorDimension(2) != input.Width)
@@ -70,16 +75,21 @@ namespace Bonsai.DeepLabCut
                     var poseTensor = output[0];
                     var pose = new Mat((int)poseTensor.Shape[0], (int)poseTensor.Shape[1], Depth.F32, 1, poseTensor.Data);
                     var result = new Pose(input);
+                    var threshold = MinConfidence;
                     for (int i = 0; i < pose.Rows; i++)
                     {
-                        var x = pose.GetReal(i, 1);
-                        var y = pose.GetReal(i, 0);
-                        var bodyPart = new BodyPart
+                        BodyPart bodyPart;
+                        bodyPart.Name = config[i];
+                        bodyPart.Confidence = (float)pose.GetReal(i, 2);
+                        if (bodyPart.Confidence < threshold)
                         {
-                            Name = config[i],
-                            Position = new Point2f((float)x, (float)y),
-                            Confidence = (float)pose.GetReal(i, 2)
-                        };
+                            bodyPart.Position = new Point2f(float.NaN, float.NaN);
+                        }
+                        else
+                        {
+                            bodyPart.Position.X = (float)pose.GetReal(i, 1);
+                            bodyPart.Position.Y = (float)pose.GetReal(i, 0);
+                        }
                         result.Add(bodyPart);
                     }
                     return result;

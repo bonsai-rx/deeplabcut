@@ -18,7 +18,7 @@ namespace Bonsai.DeepLabCut
         }
     }
 
-    public class BodyPart
+    public struct BodyPart
     {
         public string Name;
         public Point2f Position;
