@@ -5,6 +5,8 @@ Bonsai.DeepLabCut is a [Bonsai](https://bonsai-rx.org/) interface for [DeepLabCu
 
 Bonsai.DeepLabCut loads these .pb files using [TensorFlowSharp](https://github.com/migueldeicaza/TensorFlowSharp), a set of .NET bindings for TensorFlow allowing native inference using either the CPU or GPU. By using the .pb file and the pose configuration YAML, the `DetectPose` operator from Bonsai.DeepLabCut automatically sets up an inference graph and feeds it with live image data coming from any other Bonsai image source. The output is a `Pose` class which you can access to extract specific body parts, filter out invalid positions using a confidence threshold, or record using `CsvWriter`.
 
+The Bonsai.DeepLabCut project was kickstarted at the [DeepLabCut Hackathon](https://www.mousemotorlab.org/workshops) sponsored by the [Chan Zuckerberg Initiative](https://chanzuckerberg.com/) and held at Harvard University.
+
 ## How to install
 
 Bonsai.DeepLabCut can be downloaded through the Bonsai package manager. In order to get visualizer support, you should download both the `Bonsai.DeepLabCut` and `Bonsai.DeepLabCut.Design` packages. However, in order to use it for either CPU or GPU inference, you need to pair it with a compiled native TensorFlow binary. You can find precompiled binaries for Windows 64-bit at https://github.com/Neargye/tensorflow/releases.
