@@ -1,4 +1,5 @@
 # Bonsai - DeepLabCut
+![logo](Resources/bonsai-dlc.png)
 
 Bonsai.DeepLabCut is a [Bonsai](https://bonsai-rx.org/) interface for [DeepLabCut](https://www.mousemotorlab.org/deeplabcut) allowing real-time markerless pose estimation using pretrained models stored in the [Protocol Buffers (pb)](https://developers.google.com/protocol-buffers/) format. Natively, DLC stores the result of training as checkpoints, but it is possible to export them to .pb files using the [DeepLabCut-modelexport](https://github.com/AlexEMG/DeepLabCut-modelexport) script.
 
