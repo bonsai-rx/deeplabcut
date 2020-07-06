@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reactive.Linq;
 using OpenCV.Net;
@@ -27,6 +27,9 @@ namespace Bonsai.DeepLabCut
         [Description("The optional confidence threshold used to discard position values.")]
         public float? MinConfidence { get; set; }
 
+        [Description("The optional scale factor used to resize video frames for inference.")]
+        public float? ScaleFactor { get; set; }
+
         public override IObservable<Pose> Process(IObservable<IplImage> source)
         {
             return Observable.Defer(() =>
@@ -47,21 +50,46 @@ namespace Bonsai.DeepLabCut
                 var bytes = File.ReadAllBytes(ModelFileName);
                 graph.Import(bytes);
 
+                IplImage temp = null;
                 TFTensor tensor = null;
                 var config = ConfigHelper.PoseConfig(PoseConfigFileName);
                 return source.Select(input =>
                 {
-                    if (tensor == null || tensor.GetTensorDimension(1) != input.Height || tensor.GetTensorDimension(2) != input.Width)
+                    var poseScale = 1.0;
+                    const int TensorChannels = 3;
+                    var frameSize = input.Size;
+                    var scaleFactor = ScaleFactor;
+                    if (scaleFactor.HasValue)
+                    {
+                        poseScale = scaleFactor.Value;
+                        frameSize.Width = (int)(frameSize.Width * poseScale);
+                        frameSize.Height = (int)(frameSize.Height * poseScale);
+                        poseScale = 1.0 / poseScale;
+                    }
+
+                    if (tensor == null || tensor.GetTensorDimension(1) != frameSize.Height || tensor.GetTensorDimension(2) != frameSize.Width)
                     {
                         tensor = new TFTensor(
                             TFDataType.Float,
-                            new long[] { 1, input.Height, input.Width, 3 },
-                            input.WidthStep * input.Height * 4);
+                            new long[] { 1, frameSize.Height, frameSize.Width, TensorChannels },
+                            frameSize.Width * frameSize.Height * TensorChannels * sizeof(float));
                     }
 
-                    using (var image = new IplImage(input.Size, IplDepth.F32, 3, tensor.Data))
+                    var frame = input;
+                    if (frameSize != input.Size)
                     {
-                        CV.Convert(input, image);
+                        if (temp == null || temp.Size != frameSize)
+                        {
+                            temp = new IplImage(frameSize, input.Depth, input.Channels);
+                        }
+
+                        CV.Resize(input, temp);
+                        frame = temp;
+                    }
+
+                    using (var image = new IplImage(frameSize, IplDepth.F32, TensorChannels, tensor.Data))
+                    {
+                        CV.Convert(frame, image);
                     }
 
                     var runner = session.GetRunner();
@@ -87,8 +115,8 @@ namespace Bonsai.DeepLabCut
                         }
                         else
                         {
-                            bodyPart.Position.X = (float)pose.GetReal(i, 1);
-                            bodyPart.Position.Y = (float)pose.GetReal(i, 0);
+                            bodyPart.Position.X = (float)(pose.GetReal(i, 1) * poseScale);
+                            bodyPart.Position.Y = (float)(pose.GetReal(i, 0) * poseScale);
                         }
                         result.Add(bodyPart);
                     }
