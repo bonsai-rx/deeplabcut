@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reactive.Linq;
 using OpenCV.Net;
@@ -93,6 +93,10 @@ namespace Bonsai.DeepLabCut
                         result.Add(bodyPart);
                     }
                     return result;
+                }).Finally(() =>
+                {
+                    session.Dispose();
+                    graph.Dispose();
                 });
             });
         }
