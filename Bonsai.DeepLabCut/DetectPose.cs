@@ -121,10 +121,6 @@ namespace Bonsai.DeepLabCut
                         result.Add(bodyPart);
                     }
                     return result;
-                }).Finally(() =>
-                {
-                    session.Dispose();
-                    graph.Dispose();
                 });
             });
         }
