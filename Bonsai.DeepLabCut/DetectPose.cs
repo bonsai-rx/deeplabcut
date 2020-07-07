@@ -52,6 +52,7 @@ namespace Bonsai.DeepLabCut
 
                 IplImage temp = null;
                 TFTensor tensor = null;
+                TFSession.Runner runner = null;
                 var config = ConfigHelper.PoseConfig(PoseConfigFileName);
                 return source.Select(input =>
                 {
@@ -73,6 +74,9 @@ namespace Bonsai.DeepLabCut
                             TFDataType.Float,
                             new long[] { 1, frameSize.Height, frameSize.Width, TensorChannels },
                             frameSize.Width * frameSize.Height * TensorChannels * sizeof(float));
+                        runner = session.GetRunner();
+                        runner.AddInput(graph["Placeholder"][0], tensor);
+                        runner.Fetch(graph["concat_1"][0]);
                     }
 
                     var frame = input;
@@ -91,10 +95,6 @@ namespace Bonsai.DeepLabCut
                     {
                         CV.Convert(frame, image);
                     }
-
-                    var runner = session.GetRunner();
-                    runner.AddInput(graph["Placeholder"][0], tensor);
-                    runner.Fetch(graph["concat_1"][0]);
 
                     // Run the model
                     var output = runner.Run();
