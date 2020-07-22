@@ -6,7 +6,7 @@
     <PackageTags>Bonsai Rx Dlc DeepLabCut Markerless Pose Tracking</PackageTags>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetFramework>net472</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

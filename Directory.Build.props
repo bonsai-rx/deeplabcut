@@ -3,9 +3,9 @@
   <PropertyGroup>
     <Authors>Gonçalo Lopes</Authors>
     <Copyright>Copyright © Gonçalo Lopes 2020</Copyright>
-    <ProjectUrl>https://github.com/bonsai-rx/dlc</ProjectUrl>
+    <PackageProjectUrl>https://github.com/bonsai-rx/deeplabcut</PackageProjectUrl>
     <PackageLicenseUrl>https://bonsai-rx.org/license</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/bonsai-rx/deeplabcut/master/icon.png</PackageIconUrl>
+    <PackageIconUrl>https://github.com/bonsai-rx/deeplabcut/raw/master/icon.png</PackageIconUrl>
     <IncludeSymbols Condition="'$(Configuration)'=='Release'">true</IncludeSymbols>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
     <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
