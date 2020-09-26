@@ -28,3 +28,19 @@ The core operator of Bonsai.DeepLabCut is the `DetectPose` node. You can place i
 You will also need to point the `ModelFileName` to the exported .pb file containing your pretrained DLC model, and the `PoseConfigFileName` to the `pose_cfg.yaml` file describing the joint labels of the pose skeleton.
 
 If everything works out, you should see some indications in the Bonsai command line window about whether the GPU was successfully detected and enabled. The first frame will cold start the inference graph which may take a bit of time, but after that your poses should start streaming through!
+
+## Short DLC install guide
+
+For all questions regarding installation of DeepLabCut, please check the official [docs](https://github.com/DeepLabCut/DeepLabCut/blob/master/docs/installation.md). However, we did find the following build steps to be reliable for a self-contained barebones install on Windows at the time of writing:
+
+1. Download WinPython 3.7 64bit only from [GitHub](https://github.com/winpython/winpython/releases/download/2.3.20200530/Winpython64-3.7.7.1dot.exe).
+2. Extract to a folder and launch `WinPython Command Prompt.exe`.
+3. `pip install tensorflow==1.15.4` or `pip install tensorflow-gpu==1.15.4` depending on whether you will be using CPU or GPU TensorFlow.
+4. `pip install wxPython==4.0.4`
+5. `pip install deeplabcut==2.2b8`
+6. `ipython`
+7. The following should then launch the DLC gui:
+```python
+import deeplabcut
+deeplabcut.launch_dlc()
+```
