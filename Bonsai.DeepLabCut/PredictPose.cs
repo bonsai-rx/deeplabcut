@@ -37,7 +37,7 @@ namespace Bonsai.DeepLabCut
                 TFTensor tensor = null;
                 TFSession.Runner runner = null;
                 var graph = TensorHelper.ImportModel(ModelFileName, out TFSession session);
-                var config = ConfigHelper.PoseConfig(PoseConfigFileName);
+                var config = ConfigHelper.LoadPoseConfig(PoseConfigFileName);
                 return source.Select(input =>
                 {
                     var poseScale = 1.0;
@@ -70,7 +70,7 @@ namespace Bonsai.DeepLabCut
                     for (int i = 0; i < pose.Rows; i++)
                     {
                         BodyPart bodyPart;
-                        bodyPart.Name = config[i];
+                        bodyPart.Name = config.JointNames[i];
                         bodyPart.Confidence = (float)pose.GetReal(i, 2);
                         if (bodyPart.Confidence < threshold)
                         {
