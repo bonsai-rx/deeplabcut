@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using OpenCV.Net;
 using TensorFlow;
-using System.IO;
 using System.ComponentModel;
 
 namespace Bonsai.DeepLabCut
@@ -34,72 +33,36 @@ namespace Bonsai.DeepLabCut
         {
             return Observable.Defer(() =>
             {
-                TFSessionOptions options = new TFSessionOptions();
-                unsafe
-                {
-
-                    byte[] GPUConfig = new byte[] { 0x32, 0x02, 0x20, 0x01 };
-                    fixed (void* ptr = &GPUConfig[0])
-                    {
-                        options.SetConfig(new IntPtr(ptr), GPUConfig.Length);
-                    }
-                }
-
-                var graph = new TFGraph();
-                var session = new TFSession(graph, options, null);
-                var bytes = File.ReadAllBytes(ModelFileName);
-                graph.Import(bytes);
-
                 IplImage temp = null;
                 TFTensor tensor = null;
                 TFSession.Runner runner = null;
+                var graph = TensorHelper.ImportModel(ModelFileName, out TFSession session);
                 var config = ConfigHelper.PoseConfig(PoseConfigFileName);
                 return source.Select(input =>
                 {
                     var poseScale = 1.0;
-                    const int TensorChannels = 3;
-                    var frameSize = input.Size;
+                    var tensorSize = input.Size;
                     var scaleFactor = ScaleFactor;
                     if (scaleFactor.HasValue)
                     {
                         poseScale = scaleFactor.Value;
-                        frameSize.Width = (int)(frameSize.Width * poseScale);
-                        frameSize.Height = (int)(frameSize.Height * poseScale);
+                        tensorSize.Width = (int)(tensorSize.Width * poseScale);
+                        tensorSize.Height = (int)(tensorSize.Height * poseScale);
                         poseScale = 1.0 / poseScale;
                     }
 
-                    if (tensor == null || tensor.GetTensorDimension(1) != frameSize.Height || tensor.GetTensorDimension(2) != frameSize.Width)
+                    if (tensor == null || tensor.GetTensorDimension(1) != tensorSize.Height || tensor.GetTensorDimension(2) != tensorSize.Width)
                     {
-                        tensor = new TFTensor(
-                            TFDataType.Float,
-                            new long[] { 1, frameSize.Height, frameSize.Width, TensorChannels },
-                            frameSize.Width * frameSize.Height * TensorChannels * sizeof(float));
                         runner = session.GetRunner();
-                        runner.AddInput(graph["Placeholder"][0], tensor);
-                        runner.Fetch(graph["concat_1"][0]);
-                    }
-
-                    var frame = input;
-                    if (frameSize != input.Size)
-                    {
-                        if (temp == null || temp.Size != frameSize)
-                        {
-                            temp = new IplImage(frameSize, input.Depth, input.Channels);
-                        }
-
-                        CV.Resize(input, temp);
-                        frame = temp;
-                    }
-
-                    using (var image = new IplImage(frameSize, IplDepth.F32, TensorChannels, tensor.Data))
-                    {
-                        CV.Convert(frame, image);
+                        tensor = TensorHelper.CreatePlaceholder(graph, runner, tensorSize);
+                        runner.Fetch("concat_1");
                     }
 
                     // Run the model
+                    TensorHelper.UpdateTensor(tensor, tensorSize, input, ref temp);
                     var output = runner.Run();
 
-                    // Fetch the results from output:
+                    // Fetch the results from output
                     var poseTensor = output[0];
                     var pose = new Mat((int)poseTensor.Shape[0], (int)poseTensor.Shape[1], Depth.F32, 1, poseTensor.Data);
                     var result = new Pose(input);
