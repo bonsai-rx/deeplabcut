@@ -9,7 +9,7 @@ namespace Bonsai.DeepLabCut
 {
     [DefaultProperty(nameof(ModelFileName))]
     [Description("Performs markerless pose estimation using a DeepLabCut model on the input image sequence.")]
-    public class DetectPose : Transform<IplImage, Pose>
+    public class PredictPose : Transform<IplImage, Pose>
     {
         [FileNameFilter("Protocol Buffer Files(*.pb)|*.pb")]
         [Editor("Bonsai.Design.OpenFileNameEditor, Bonsai.Design", DesignTypes.UITypeEditor)]
@@ -87,5 +87,10 @@ namespace Bonsai.DeepLabCut
                 });
             });
         }
+    }
+
+    [Obsolete]
+    public class DetectPose : PredictPose
+    {
     }
 }
