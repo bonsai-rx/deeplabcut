@@ -87,6 +87,40 @@ namespace Bonsai.DeepLabCut
                 });
             });
         }
+
+        public IObservable<Pose> Process(IObservable<PoseEstimation> source)
+        {
+            return source.Select(input =>
+            {
+                var config = input.PoseConfig;
+                var result = new Pose(input.Image);
+                var threshold = MinConfidence;
+                var stride = config.Stride;
+                for (int i = 0; i < config.JointNames.Count; i++)
+                {
+                    BodyPart bodyPart;
+                    var scoreMap = input.ScoreMaps[i];
+                    bodyPart.Name = config.JointNames[i];
+                    CV.MinMaxLoc(scoreMap, out double min, out double max, out Point minLoc, out Point maxLoc);
+                    bodyPart.Confidence = (float)max;
+                    if (bodyPart.Confidence < threshold)
+                    {
+                        bodyPart.Position = new Point2f(float.NaN, float.NaN);
+                    }
+                    else
+                    {
+                        var locRefX = input.LocationRefinement[i * 2 + 0];
+                        var locRefY = input.LocationRefinement[i * 2 + 1];
+                        var offsetX = locRefX[maxLoc.X, maxLoc.Y].Val0;
+                        var offsetY = locRefY[maxLoc.X, maxLoc.Y].Val0;
+                        bodyPart.Position.X = (float)(maxLoc.X * stride + 0.5 * stride + offsetX);
+                        bodyPart.Position.Y = (float)(maxLoc.Y * stride + 0.5 * stride + offsetY);
+                    }
+                    result.Add(bodyPart);
+                }
+                return result;
+            });
+        }
     }
 
     [Obsolete]

@@ -59,6 +59,9 @@ namespace Bonsai.DeepLabCut
                             config.PartAffinityGraph.Add(linkDescriptor);
                         }
                         break;
+                    case "stride":
+                        config.Stride = double.Parse((string)entry.Value);
+                        break;
                 }
             }
             return config;

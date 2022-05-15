@@ -12,6 +12,8 @@ namespace Bonsai.DeepLabCut
 
         public bool PredictPartAffinityField { get; set; }
 
+        public double Stride { get; set; }
+
         public struct Link
         {
             public int Source;
