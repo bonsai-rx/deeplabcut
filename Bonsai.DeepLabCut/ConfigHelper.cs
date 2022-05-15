@@ -43,6 +43,22 @@ namespace Bonsai.DeepLabCut
                             config.JointNames.Add((string)part);
                         }
                         break;
+                    case "location_refinement":
+                        config.LocationRefinement = bool.Parse((string)entry.Value);
+                        break;
+                    case "partaffinityfield_predict":
+                        config.PredictPartAffinityField = bool.Parse((string)entry.Value);
+                        break;
+                    case "partaffinityfield_graph":
+                        var partAffinityGraph = (YamlSequenceNode)entry.Value;
+                        foreach (YamlSequenceNode link in partAffinityGraph)
+                        {
+                            PoseConfig.Link linkDescriptor;
+                            linkDescriptor.Source = int.Parse((string)link.Children[0]);
+                            linkDescriptor.Target = int.Parse((string)link.Children[1]);
+                            config.PartAffinityGraph.Add(linkDescriptor);
+                        }
+                        break;
                 }
             }
             return config;
