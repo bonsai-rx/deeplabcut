@@ -51,7 +51,7 @@ namespace Bonsai.DeepLabCut
                         poseScale = 1.0 / poseScale;
                     }
 
-                    if (tensor == null || tensor.GetTensorDimension(1) != tensorSize.Height || tensor.GetTensorDimension(2) != tensorSize.Width)
+                    if (tensor == null || tensor.Shape[1] != tensorSize.Height || tensor.Shape[2] != tensorSize.Width)
                     {
                         runner = session.GetRunner();
                         tensor = TensorHelper.CreatePlaceholder(graph, runner, tensorSize);

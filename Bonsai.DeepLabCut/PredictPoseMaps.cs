@@ -1,4 +1,4 @@
-﻿using OpenCV.Net;
+using OpenCV.Net;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace Bonsai.DeepLabCut
                 return source.Select(input =>
                 {
                     var tensorSize = input.Size;
-                    if (tensor == null || tensor.GetTensorDimension(1) != tensorSize.Height || tensor.GetTensorDimension(2) != tensorSize.Width)
+                    if (tensor == null || tensor.Shape[1] != tensorSize.Height || tensor.Shape[2] != tensorSize.Width)
                     {
                         runner = session.GetRunner();
                         tensor = TensorHelper.CreatePlaceholder(graph, runner, tensorSize);
