@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reactive.Linq;
 using OpenCV.Net;
@@ -111,8 +111,8 @@ namespace Bonsai.DeepLabCut
                     {
                         var locRefX = input.LocationRefinement[i * 2 + 0];
                         var locRefY = input.LocationRefinement[i * 2 + 1];
-                        var offsetX = locRefX[maxLoc.X, maxLoc.Y].Val0;
-                        var offsetY = locRefY[maxLoc.X, maxLoc.Y].Val0;
+                        var offsetX = locRefX[maxLoc.Y, maxLoc.X].Val0;
+                        var offsetY = locRefY[maxLoc.Y, maxLoc.X].Val0;
                         bodyPart.Position.X = (float)(maxLoc.X * stride + 0.5 * stride + offsetX);
                         bodyPart.Position.Y = (float)(maxLoc.Y * stride + 0.5 * stride + offsetY);
                     }
