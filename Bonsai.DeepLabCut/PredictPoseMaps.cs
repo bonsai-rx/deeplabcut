@@ -25,7 +25,6 @@ namespace Bonsai.DeepLabCut
         {
             return Observable.Defer(() =>
             {
-                IplImage temp = null;
                 TFTensor tensor = null;
                 TFSession.Runner runner = null;
                 var graph = TensorHelper.ImportModel(ModelFileName, out TFSession session);
@@ -42,12 +41,12 @@ namespace Bonsai.DeepLabCut
                     }
 
                     // Run the model
-                    TensorHelper.UpdateTensor(tensor, tensorSize, input, ref temp);
+                    TensorHelper.UpdateTensor(tensor, input);
                     var output = runner.Run();
 
                     // Fetch the results from output
-                    var scoreMap = TensorHelper.GetImageArray(output[0]);
-                    var locRef = TensorHelper.GetImageArray(output[1]);
+                    var scoreMap = TensorHelper.GetTensorMaps(output[0]);
+                    var locRef = TensorHelper.GetTensorMaps(output[1]);
                     return new PoseEstimation(input, config, scoreMap, locRef);
                 });
             });

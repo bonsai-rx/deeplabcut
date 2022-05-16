@@ -59,7 +59,8 @@ namespace Bonsai.DeepLabCut
                     }
 
                     // Run the model
-                    TensorHelper.UpdateTensor(tensor, tensorSize, input, ref temp);
+                    var frame = TensorHelper.PrepareFrameData(input, tensorSize, ref temp);
+                    TensorHelper.UpdateTensor(tensor, input);
                     var output = runner.Run();
 
                     // Fetch the results from output
