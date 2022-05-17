@@ -41,6 +41,17 @@ namespace Bonsai.DeepLabCut
             return tensor;
         }
 
+        public static IplImage GetRegionOfInterest(IplImage frame, Rect rect, out Point offset)
+        {
+            if (rect.Width > 0 && rect.Height > 0)
+            {
+                frame = frame.GetSubRect(rect);
+                offset = new Point(rect.X, rect.Y);
+            }
+            else offset = Point.Zero;
+            return frame;
+        }
+
         public static IplImage EnsureFrameSize(IplImage frame, Size tensorSize, ref IplImage resizeTemp)
         {
             if (tensorSize != frame.Size)

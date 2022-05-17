@@ -32,7 +32,7 @@ namespace Bonsai.DeepLabCut
         [Description("The optional color conversion used to prepare RGB video frames for inference.")]
         public ColorConversion? ColorConversion { get; set; } = OpenCV.Net.ColorConversion.Bgr2Rgb;
 
-        public override IObservable<Pose> Process(IObservable<IplImage> source)
+        IObservable<Pose> Process<TSource>(IObservable<TSource> source, Func<TSource, (IplImage, Rect)> roiSelector)
         {
             return Observable.Defer(() =>
             {
@@ -42,10 +42,11 @@ namespace Bonsai.DeepLabCut
                 TFSession.Runner runner = null;
                 var graph = TensorHelper.ImportModel(ModelFileName, out TFSession session);
                 var config = ConfigHelper.LoadPoseConfig(PoseConfigFileName);
-                return source.Select(input =>
+                return source.Select(value =>
                 {
                     var poseScale = 1.0;
-                    var tensorSize = input.Size;
+                    var (input, roi) = roiSelector(value);
+                    var tensorSize = roi.Width > 0 && roi.Height > 0 ? new Size(roi.Width, roi.Height) : input.Size;
                     var scaleFactor = ScaleFactor;
                     if (scaleFactor.HasValue)
                     {
@@ -64,7 +65,8 @@ namespace Bonsai.DeepLabCut
                     }
 
                     // Run the model
-                    var frame = TensorHelper.EnsureFrameSize(input, tensorSize, ref resizeTemp);
+                    var frame = TensorHelper.GetRegionOfInterest(input, roi, out Point offset);
+                    frame = TensorHelper.EnsureFrameSize(frame, tensorSize, ref resizeTemp);
                     frame = TensorHelper.EnsureColorFormat(frame, ColorConversion, ref colorTemp);
                     TensorHelper.UpdateTensor(tensor, frame);
                     var output = runner.Run();
@@ -85,14 +87,24 @@ namespace Bonsai.DeepLabCut
                         }
                         else
                         {
-                            bodyPart.Position.X = (float)(pose.GetReal(i, 1) * poseScale);
-                            bodyPart.Position.Y = (float)(pose.GetReal(i, 0) * poseScale);
+                            bodyPart.Position.X = (float)(pose.GetReal(i, 1) * poseScale) + offset.X;
+                            bodyPart.Position.Y = (float)(pose.GetReal(i, 0) * poseScale) + offset.Y;
                         }
                         result.Add(bodyPart);
                     }
                     return result;
                 });
             });
+        }
+
+        public override IObservable<Pose> Process(IObservable<IplImage> source)
+        {
+            return Process(source, frame => (frame, new Rect(0, 0, 0, 0)));
+        }
+
+        public IObservable<Pose> Process(IObservable<Tuple<IplImage, Rect>> source)
+        {
+            return Process(source, input => (input.Item1, input.Item2));
         }
 
         public IObservable<Pose> Process(IObservable<PoseEstimation> source)
