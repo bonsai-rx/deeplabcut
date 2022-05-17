@@ -9,8 +9,11 @@ namespace Bonsai.DeepLabCut
     [Description("Computes the bounding box according to the smallest and largest position of the pose body parts and the specified margin.")]
     public class GetBoundingBox : Transform<Pose, Rect>
     {
-        [Description("Specifies the margin, in pixels, by which to expand the pose bounding box.")]
+        [Description("Specifies the margin, in pixels, used to set or expand the pose bounding box size.")]
         public Size Margin { get; set; }
+
+        [Description("Specifies the method for extracting the pose bounding box.")]
+        public BoundingBoxMethod Method { get; set; }
 
         public override IObservable<Rect> Process(IObservable<Pose> source)
         {
@@ -42,14 +45,35 @@ namespace Bonsai.DeepLabCut
                 }
 
                 if (float.IsNaN(boundsMin.X)) return new Rect(0, 0, 0, 0);
+                var method = Method;
                 var margin = Margin;
                 var imageSize = pose.Image.Size;
-                var left = Math.Max(0, (int)boundsMin.X - margin.Width);
-                var top = Math.Max(0, (int)boundsMin.Y - margin.Height);
-                var right = Math.Min(imageSize.Width - 1, (int)boundsMax.X + margin.Width);
-                var bottom = Math.Min(imageSize.Height - 1, (int)boundsMax.Y + margin.Height);
-                return new Rect(left, top, right - left + 1, bottom - top + 1);
+                if (method == BoundingBoxMethod.FixedSize)
+                {
+                    var centerX = (int)((boundsMin.X + boundsMax.X) / 2);
+                    var centerY = (int)((boundsMin.Y + boundsMax.Y) / 2);
+                    var left = centerX - margin.Width / 2;
+                    var top = centerY - margin.Height / 2;
+                    var rect = new Rect(left, top, margin.Width, margin.Height);
+                    rect.X += rect.X < 0 ? -rect.X : -Math.Max(0, rect.X + rect.Width - imageSize.Width);
+                    rect.Y += rect.Y < 0 ? -rect.Y : -Math.Max(0, rect.Y + rect.Height - imageSize.Height);
+                    return rect;
+                }
+                else
+                {
+                    var left = Math.Max(0, (int)boundsMin.X - margin.Width);
+                    var top = Math.Max(0, (int)boundsMin.Y - margin.Height);
+                    var right = Math.Min(imageSize.Width - 1, (int)boundsMax.X + margin.Width);
+                    var bottom = Math.Min(imageSize.Height - 1, (int)boundsMax.Y + margin.Height);
+                    return new Rect(left, top, right - left + 1, bottom - top + 1);
+                }
             });
         }
+    }
+
+    public enum BoundingBoxMethod
+    {
+        FixedSize,
+        Margin,
     }
 }
