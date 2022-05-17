@@ -11,22 +11,24 @@ namespace Bonsai.DeepLabCut
 
         public static TFGraph ImportModel(string fileName, out TFSession session)
         {
-            TFSessionOptions options = new TFSessionOptions();
-            unsafe
+            using (var options = new TFSessionOptions())
             {
-
-                byte[] GPUConfig = new byte[] { 0x32, 0x02, 0x20, 0x01 };
-                fixed (void* ptr = &GPUConfig[0])
+                unsafe
                 {
-                    options.SetConfig(new IntPtr(ptr), GPUConfig.Length);
-                }
-            }
 
-            var graph = new TFGraph();
-            var bytes = File.ReadAllBytes(fileName);
-            session = new TFSession(graph, options, null);
-            graph.Import(bytes);
-            return graph;
+                    byte[] GPUConfig = new byte[] { 0x32, 0x02, 0x20, 0x01 };
+                    fixed (void* ptr = &GPUConfig[0])
+                    {
+                        options.SetConfig(new IntPtr(ptr), GPUConfig.Length);
+                    }
+                }
+
+                var graph = new TFGraph();
+                var bytes = File.ReadAllBytes(fileName);
+                session = new TFSession(graph, options, null);
+                graph.Import(bytes);
+                return graph;
+            }
         }
 
         public static TFTensor CreatePlaceholder(TFGraph graph, TFSession.Runner runner, Size frameSize, int batchSize = 1)

@@ -57,6 +57,7 @@ namespace Bonsai.DeepLabCut
 
                     if (tensor == null || tensor.Shape[1] != tensorSize.Height || tensor.Shape[2] != tensorSize.Width)
                     {
+                        tensor?.Dispose();
                         runner = session.GetRunner();
                         tensor = TensorHelper.CreatePlaceholder(graph, runner, tensorSize);
                         runner.Fetch("concat_1");

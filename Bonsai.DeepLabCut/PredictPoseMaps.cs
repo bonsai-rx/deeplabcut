@@ -51,6 +51,7 @@ namespace Bonsai.DeepLabCut
                         tensor.Shape[1] != tensorSize.Height ||
                         tensor.Shape[2] != tensorSize.Width)
                     {
+                        tensor?.Dispose();
                         runner = session.GetRunner();
                         tensor = TensorHelper.CreatePlaceholder(graph, runner, tensorSize, input.Length);
                         if (config.LocationRefinement) runner.Fetch("Sigmoid", "pose/locref_pred/block4/BiasAdd");
