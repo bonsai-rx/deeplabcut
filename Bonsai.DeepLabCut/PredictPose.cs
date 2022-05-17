@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reactive.Linq;
 using OpenCV.Net;
@@ -29,11 +29,15 @@ namespace Bonsai.DeepLabCut
         [Description("The optional scale factor used to resize video frames for inference.")]
         public float? ScaleFactor { get; set; }
 
+        [Description("The optional color conversion used to prepare RGB video frames for inference.")]
+        public ColorConversion? ColorConversion { get; set; } = OpenCV.Net.ColorConversion.Bgr2Rgb;
+
         public override IObservable<Pose> Process(IObservable<IplImage> source)
         {
             return Observable.Defer(() =>
             {
-                IplImage temp = null;
+                IplImage resizeTemp = null;
+                IplImage colorTemp = null;
                 TFTensor tensor = null;
                 TFSession.Runner runner = null;
                 var graph = TensorHelper.ImportModel(ModelFileName, out TFSession session);
@@ -59,8 +63,9 @@ namespace Bonsai.DeepLabCut
                     }
 
                     // Run the model
-                    var frame = TensorHelper.PrepareFrameData(input, tensorSize, ref temp);
-                    TensorHelper.UpdateTensor(tensor, input);
+                    var frame = TensorHelper.EnsureFrameSize(input, tensorSize, ref resizeTemp);
+                    frame = TensorHelper.EnsureColorFormat(frame, ColorConversion, ref colorTemp);
+                    TensorHelper.UpdateTensor(tensor, frame);
                     var output = runner.Run();
 
                     // Fetch the results from output
@@ -127,5 +132,9 @@ namespace Bonsai.DeepLabCut
     [Obsolete]
     public class DetectPose : PredictPose
     {
+        public DetectPose()
+        {
+            ColorConversion = null;
+        }
     }
 }

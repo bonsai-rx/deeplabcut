@@ -21,6 +21,9 @@ namespace Bonsai.DeepLabCut
         [Description("The path to the configuration YAML file containing joint labels.")]
         public string PoseConfigFileName { get; set; }
 
+        [Description("The optional color conversion used to prepare RGB video frames for inference.")]
+        public ColorConversion? ColorConversion { get; set; } = OpenCV.Net.ColorConversion.Bgr2Rgb;
+
         IObservable<TResult> Process<TSource, TResult>(
             IObservable<TSource> source,
             Func<TSource, IplImage[]> sourceSelector,
@@ -28,12 +31,14 @@ namespace Bonsai.DeepLabCut
         {
             return Observable.Defer(() =>
             {
+                IplImage colorTemp = null;
                 TFTensor tensor = null;
                 TFSession.Runner runner = null;
                 var graph = TensorHelper.ImportModel(ModelFileName, out TFSession session);
                 var config = ConfigHelper.LoadPoseConfig(PoseConfigFileName);
                 return source.Select(value =>
                 {
+                    var colorConversion = ColorConversion;
                     var input = sourceSelector(value);
                     if (input.Length == 0)
                     {
@@ -53,7 +58,13 @@ namespace Bonsai.DeepLabCut
                     }
 
                     // Run the model
-                    TensorHelper.UpdateTensor(tensor, input);
+                    var frames = input;
+                    if (colorConversion.HasValue)
+                    {
+                        frames = Array.ConvertAll(frames, frame =>
+                            TensorHelper.EnsureColorFormat(frame, colorConversion, ref colorTemp));
+                    }
+                    TensorHelper.UpdateTensor(tensor, frames);
                     var output = runner.Run();
 
                     // Fetch the results from output

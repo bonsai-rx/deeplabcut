@@ -39,17 +39,33 @@ namespace Bonsai.DeepLabCut
             return tensor;
         }
 
-        public static IplImage PrepareFrameData(IplImage frame, Size tensorSize, ref IplImage temp)
+        public static IplImage EnsureFrameSize(IplImage frame, Size tensorSize, ref IplImage resizeTemp)
         {
             if (tensorSize != frame.Size)
             {
-                if (temp == null || temp.Size != tensorSize)
+                if (resizeTemp == null || resizeTemp.Size != tensorSize)
                 {
-                    temp = new IplImage(tensorSize, frame.Depth, frame.Channels);
+                    resizeTemp = new IplImage(tensorSize, frame.Depth, frame.Channels);
                 }
 
-                CV.Resize(frame, temp);
-                return temp;
+                CV.Resize(frame, resizeTemp);
+                frame = resizeTemp;
+            }
+
+            return frame;
+        }
+
+        public static IplImage EnsureColorFormat(IplImage frame, ColorConversion? colorConversion, ref IplImage colorTemp)
+        {
+            if (colorConversion != null)
+            {
+                if (colorTemp == null || colorTemp.Size != frame.Size)
+                {
+                    colorTemp = new IplImage(frame.Size, frame.Depth, TensorChannels);
+                }
+
+                CV.CvtColor(frame, colorTemp, colorConversion.Value);
+                frame = colorTemp;
             }
 
             return frame;
