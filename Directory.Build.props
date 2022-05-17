@@ -2,7 +2,7 @@
 <Project>
   <PropertyGroup>
     <Authors>Gonçalo Lopes</Authors>
-    <Copyright>Copyright © Gonçalo Lopes 2020</Copyright>
+    <Copyright>Copyright © Gonçalo Lopes 2022</Copyright>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/bonsai-rx/deeplabcut</PackageProjectUrl>
     <PackageLicenseUrl>https://bonsai-rx.org/license</PackageLicenseUrl>
