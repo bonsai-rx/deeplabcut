@@ -1,0 +1,46 @@
+<!--
+  Solution-specific configuration/targets should generally not be placed in this file, instead create or update Project.csproj.targets
+-->
+<Project>
+  <ItemGroup>
+    <None Include="$(PackageIconSourcePath)" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
+    <None Include="$(PackageLicenseSourcePath)" Pack="true" PackagePath="" Visible="false" />
+    <None Include="$(PackageReadmeSourcePath)" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
+  </ItemGroup>
+
+  <!-- Default tool configuration -->
+  <PropertyGroup Condition="'$(PackAsTool)' == 'true'">
+    <ToolCommandName Condition="'$(ToolCommandName)' == ''">$(TargetName.ToLowerInvariant())</ToolCommandName>
+    <PackageType>DotnetTool</PackageType>
+
+    <!--
+      Disable warnings relating to missing documentation
+      (It's actually too late to easily disable documentation file generation outright, Microsoft.NET.Sdk.BeforeCommon.targets already reacted to it being enabled.)
+    -->
+    <NoWarn>1591,1573</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="Project.csproj.targets" Condition="Exists('Project.csproj.targets')" />
+
+  <!-- Package versioning - Intentionally after project-specific targets to discourage deviation -->
+  <PropertyGroup>
+    <!--
+      When making local builds, developers can temporarily override DevVersion here or on the command line if they need multiple local versions of this project for whatever reason.
+      If you feel compelled to change this version number for local testing you're almost certainly doing something wrong!
+    -->
+    <DevVersion Condition="'$(DevVersion)' == ''">0</DevVersion>
+    <Version>42.42.42-dev$(DevVersion)</Version>
+
+    <Version Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(CiBuildVersion)</Version>
+  </PropertyGroup>
+
+  <Target Name="VersionSanityChecks" BeforeTargets="Build">
+    <Error Condition="'$(ContinuousIntegrationBuild)' == 'true' and '$(CiBuildVersion)' == ''" Text="CI version info not configured." />
+    <Error Condition="'$(PackageVersion)' != '' and '$(PackageVersion)' != '$(Version)'" Text="Do not manually specify PackageVersion." />
+  </Target>
+
+  <!-- Check for stale bin/obj directories left over from before we switched to the central artifacts folder -->
+  <Target Name="CheckForStaleOutputDirectories" AfterTargets="Build" Condition="Exists('$(ProjectDir)bin') or Exists('$(ProjectDir)obj')">
+    <Warning Text="Stale bin/obj directories exist for $(MSBuildProjectName), deleting them is strongly recommended." />
+  </Target>
+</Project>
