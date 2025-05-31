@@ -1,5 +1,5 @@
 # Bonsai - DeepLabCut
-![logo](Resources/bonsai-dlc.png)
+![logo](images/bonsai-dlc.png)
 
 Bonsai.DeepLabCut is a [Bonsai](https://bonsai-rx.org/) interface for [DeepLabCut](https://deeplabcut.github.io/DeepLabCut) allowing real-time markerless pose estimation using pretrained models stored in the [Protocol Buffers (pb)](https://developers.google.com/protocol-buffers/) format. Natively, DLC stores the result of training as checkpoints, but it is possible to export them to .pb files using the `deeplabcut.export_model` function within DLC ([Read more here](https://github.com/AlexEMG/DeepLabCut/blob/master/docs/HelperFunctions.md#new-model-export-function)).
 
@@ -23,7 +23,7 @@ After downloading the native TensorFlow binary and cuDNN, you can follow these s
 
 The core operator of Bonsai.DeepLabCut is the `DetectPose` node. You can place it after any image source, like so:
 
-![detect-pose.svg](Resources/detect-pose.svg)
+![detect-pose.svg](images/detect-pose.svg)
 
 You will also need to point the `ModelFileName` to the exported .pb file containing your pretrained DLC model, and the `PoseConfigFileName` to the `pose_cfg.yaml` file describing the joint labels of the pose skeleton.
 
