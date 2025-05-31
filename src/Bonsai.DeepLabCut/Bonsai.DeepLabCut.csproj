@@ -3,15 +3,12 @@
   <PropertyGroup>
     <Title>Bonsai - DeepLabCut Library</Title>
     <Description>Bonsai Library for real-time markerless pose estimation using DeepLabCut. TensorFlow 2.8.0 or compatible is required.</Description>
-    <PackageTags>Bonsai Rx Dlc DeepLabCut Markerless Pose Tracking</PackageTags>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetFramework>net472</TargetFramework>
-    <Version>0.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Bonsai.Core" Version="2.6.0" />
-    <PackageReference Include="OpenCV.Net" Version="3.3.1" />
+    <PackageReference Include="OpenCV.Net" Version="3.4.2" />
     <PackageReference Include="TensorFlowSharp-Lite" Version="2.8.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>

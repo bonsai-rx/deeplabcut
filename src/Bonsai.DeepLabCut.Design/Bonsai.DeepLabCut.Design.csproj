@@ -1,12 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Title>Bonsai - DeepLabCut Design Library</Title>
     <Description>Bonsai Library containing reactive visualizations for markerless pose estimation using DeepLabCut.</Description>
-    <PackageTags>Bonsai Rx Dlc DeepLabCut Markerless Pose Tracking Visualizers</PackageTags>
+    <PackageTags>$(PackageTags) Visualizers</PackageTags>
     <TargetFramework>net472</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>0.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

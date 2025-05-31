@@ -1,0 +1,3 @@
+[submodule "docs/bonsai-docfx"]
+	path = docs/bonsai-docfx
+	url = https://github.com/bonsai-rx/docfx-tools.git
